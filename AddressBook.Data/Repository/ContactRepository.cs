@@ -55,6 +55,8 @@ namespace AddressBookDataLib.Repository
         {
             Contact contact = addressBook.Contacts.SingleOrDefault((item) => item.Id == model.Id);
 
+            if (contact == null) return false;
+
             model.Type = addressBook.ContactTypes.SingleOrDefault((item) => item.Id == model.Type.Id);
 
             contact.FirstName = model.FirstName.GetOrDefault(contact.FirstName);

@@ -65,7 +65,9 @@ namespace AddressBookDataLib.Repository
             Contact updateContactModel = addressBook.Contacts
                 .SingleOrDefault((item) => item.Id == model.Contact.Id);
 
-            if ((updateContactModel == null) && (model.Contact.Id != 0)) return false; 
+            if ((updateContactModel == null) && (model.Contact.Id != 0)) return false;
+
+            if (updateModel == null) return false;
 
             updateModel.State = model.State.GetOrDefault(updateModel.State);
             updateModel.City = model.City.GetOrDefault(updateModel.City);
