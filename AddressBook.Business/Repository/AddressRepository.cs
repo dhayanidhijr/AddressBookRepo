@@ -32,7 +32,8 @@ namespace AddressBookBusinessLib.Repository
             return addressRepository.Delete(key);
         }
 
-        public Address Read(int key) { 
+        public Address Read(int key) {
+            logger.LogInformation("Address Business Lib Read {0}", key);
             return addressRepository.Read(key);
         }
 

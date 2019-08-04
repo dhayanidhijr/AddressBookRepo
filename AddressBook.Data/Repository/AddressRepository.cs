@@ -42,6 +42,7 @@ namespace AddressBookDataLib.Repository
 
         public Address Read(int key)
         {
+            this.Logger.LogInformation("Address Data Lib Read {0}", key);
             return addressBook.AddressList.Include((item) => item.Contact).SingleOrDefault((item) => item.Id == key);
         }
 
