@@ -6,10 +6,11 @@ using DataContext = AddressBookDataLib.Context;
 using DataRepository = AddressBookDataLib.Repository;
 using DataModel = AddressBookDataLib.Model;
 using System.Linq;
+using System;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace AddressBookBusinessLibTest.Repository
+namespace AddressBookDataLibTest.Repository
 {
     public class AddressRepositoryTest
     {
@@ -93,12 +94,16 @@ namespace AddressBookBusinessLibTest.Repository
             mockDataContext.Setup((item) => item.Context).Returns(mockAddressBook.Object);
 
             var addressRepository = new DataRepository.AddressRepository(mockLogger.Object, mockDatabaseSettings.Object, mockDataContext.Object);
+            DataModel.Address newAddressModel = new DataModel.Address() { Id = 10, Street = "Street", City = "City", State = "State", Contact = contactModelList.First() };
 
+
+            mockAddressBook.Setup((item) => item.Add(addressModel)).Throws(new Exception("Unexpected"));
             mockAddressBook.Setup((item) => item.SaveChanges()).Returns(0);
             mockAddressBook.Setup((item) => item.Contacts).Returns(mockedContactDBSet.Object);
             mockAddressBook.Setup((item) => item.AddressList).Returns(mockedAddressDBSet.Object);
 
             Assert.IsFalse(addressRepository.Create(addressModel));
+            Assert.IsNull(mockAddressBook.Object.AddressList.SingleOrDefault((item) => item.Id == newAddressModel.Id));
         }
 
         [Test]
@@ -160,5 +165,85 @@ namespace AddressBookBusinessLibTest.Repository
 
             Assert.IsEmpty(addressRepository.ReadAll());
         }
+
+        [Test]
+        public void ReadByContactId_AddressRecordsByContactId_ExpectedAddressRecordForContactId()
+        {
+            mockDataContext.Setup((item) => item.Context).Returns(mockAddressBook.Object);
+
+            var addressRepository = new DataRepository.AddressRepository(mockLogger.Object, mockDatabaseSettings.Object, mockDataContext.Object);
+
+            mockAddressBook.Setup((item) => item.Contacts).Returns(mockedContactDBSet.Object);
+            mockAddressBook.Setup((item) => item.AddressList).Returns(mockedAddressDBSet.Object);
+
+            Assert.IsTrue(addressRepository.ReadByContactId(1).FirstOrDefault().Id == 1);
+            Assert.IsTrue(addressRepository.ReadByContactId(1).LastOrDefault().Id == 2);
+            Assert.IsTrue(addressRepository.ReadByContactId(2).FirstOrDefault().Id == 3);
+            Assert.IsTrue(addressRepository.ReadByContactId(2).LastOrDefault().Id == 4);
+
+        }
+
+        [Test]
+        public void ReadByContactId_AddressRecorsdByContactId_ExpectedEmptyRecordProvidedContactId()
+        {
+            mockDataContext.Setup((item) => item.Context).Returns(mockAddressBook.Object);
+
+            var addressRepository = new DataRepository.AddressRepository(mockLogger.Object, mockDatabaseSettings.Object, mockDataContext.Object);
+
+            mockAddressBook.Setup((item) => item.Contacts).Returns(mockedContactDBSet.Object);
+            mockAddressBook.Setup((item) => item.AddressList).Returns(mockedAddressDBSet.Object);
+
+            Assert.IsEmpty(addressRepository.ReadByContactId(11));
+            Assert.IsEmpty(addressRepository.ReadByContactId(12));
+        }
+
+        [Test]
+        public void Update_AddressRecord_ExpectedSuccessfulUpdateFlag()
+        {
+            mockDataContext.Setup((item) => item.Context).Returns(mockAddressBook.Object);
+
+            var addressRepository = new DataRepository.AddressRepository(mockLogger.Object, mockDatabaseSettings.Object, mockDataContext.Object);
+
+            List<DataModel.Address> addressList = addressModelList.ToList();
+
+            DataModel.Address updateAddressModel = addressModelList.First();
+
+            DateTime oldUpdatedTime = updateAddressModel.Updated;
+
+            mockedAddressDBSet = GetQueryableMockDbSet<DataModel.Address>(addressList.ToList());
+
+            mockAddressBook.Setup((item) => item.SaveChanges()).Returns(1);
+            mockAddressBook.Setup((item) => item.Contacts).Returns(mockedContactDBSet.Object);
+            mockAddressBook.Setup((item) => item.AddressList).Returns(mockedAddressDBSet.Object);
+
+            Assert.IsTrue(addressRepository.Update(updateAddressModel));
+            Assert.AreNotEqual(updateAddressModel.Updated, oldUpdatedTime);
+            Assert.IsTrue(mockAddressBook.Object.AddressList.SingleOrDefault((item) => item.Id == updateAddressModel.Id).Id == updateAddressModel.Id);
+        }
+
+        [Test]
+        public void Update_AddressRecord_ExpectedFailedUpdateFlag()
+        {
+            mockDataContext.Setup((item) => item.Context).Returns(mockAddressBook.Object);
+
+            var addressRepository = new DataRepository.AddressRepository(mockLogger.Object, mockDatabaseSettings.Object, mockDataContext.Object);
+
+            List<DataModel.Address> addressList = addressModelList.ToList();
+
+            DataModel.Address updateAddressModel = new DataModel.Address() { Id = 10, Street = "Street", City = "City", State = "State", Contact = contactModelList.First() };
+
+            DateTime oldUpdatedTime = updateAddressModel.Updated;
+
+            mockedAddressDBSet = GetQueryableMockDbSet<DataModel.Address>(addressList.ToList());
+
+            mockAddressBook.Setup((item) => item.SaveChanges()).Returns(0);
+            mockAddressBook.Setup((item) => item.Contacts).Returns(mockedContactDBSet.Object);
+            mockAddressBook.Setup((item) => item.AddressList).Returns(mockedAddressDBSet.Object);
+
+            Assert.IsFalse(addressRepository.Update(updateAddressModel));
+            Assert.AreEqual(updateAddressModel.Updated, oldUpdatedTime);
+            Assert.IsNull(mockAddressBook.Object.AddressList.SingleOrDefault((item) => item.Id == updateAddressModel.Id));
+        }
+
     }
 }
