@@ -46,6 +46,7 @@ namespace AddressBook.WebApi
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1.0.0", new Info { Title = "AddressBook", Version = "v1.0.0" });
+                c.IncludeXmlComments(GetWebApiXMLDocumentPath());
             });
 
         }
@@ -69,6 +70,11 @@ namespace AddressBook.WebApi
             {
                 c.SwaggerEndpoint("../swagger/v1.0.0/swagger.json", "AddressBook");
             });
+        }
+
+        private string GetWebApiXMLDocumentPath()
+        {
+            return string.Format("{0}/AddressBookWebApi.xml", System.AppDomain.CurrentDomain.BaseDirectory);
         }
     }
 }

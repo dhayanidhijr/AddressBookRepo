@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AddressBookWebApi</name>
+    </assembly>
+    <members>
+        <member name="T:AddressBook.WebApi.Controllers.AddressController">
+            <summary>
+            Address Controller
+            </summary>
+        </member>
+        <member name="M:AddressBook.WebApi.Controllers.AddressController.#ctor(AddressBookBusinessLib.Interface.IAddressRepository)">
+            <summary>
+            Address Controller
+            </summary>
+            <param name="addressRepository">Address Repository Interface</param>
+        </member>
+        <member name="M:AddressBook.WebApi.Controllers.AddressController.Get">
+            <summary>
+            Use to retrive all active address of all contacts 
+            </summary>
+            <returns>Returns array of address object</returns>
+        </member>
+        <member name="M:AddressBook.WebApi.Controllers.AddressController.Get(System.Int32)">
+            <summary>
+            Use to retrive specific address object for the provided Id
+            </summary>
+            <param name="id">Record of the specific record which has to be retrived</param>
+            <returns>Address object for the provided valid record id</returns>
+        </member>
+        <member name="M:AddressBook.WebApi.Controllers.AddressController.GetByContactId(System.Int32)">
+            <summary>
+            Use to retrive all address associated with the provided contact id, where contact id refers to the record of Contact repository
+            </summary>
+            <param name="contactId">Contact record id, which is specified to retrive address associated</param>
+            <returns>Array of address object associated to the Contact record</returns>
+        </member>
+        <member name="M:AddressBook.WebApi.Controllers.AddressController.Post(AddressBookBusinessLib.Model.Address)">
+            <summary>
+            Use to create new Address entry with the provided address model
+            </summary>
+            <param name="address">Object encapsulates the address information</param>
+            <returns>Status OK if success and NOT FOUND when creation failed</returns>
+        </member>
+        <member name="M:AddressBook.WebApi.Controllers.AddressController.Put(System.Int32,AddressBookBusinessLib.Model.Address)">
+            <summary>
+            Use to update any existing address record
+            </summary>
+            <param name="id">Address record id, in which the changes has to be updated</param>
+            <param name="address">Changes encapsulated as an address object</param>
+            <returns>Status OK if success and NOT FOUND when update failed</returns>
+        </member>
+        <member name="M:AddressBook.WebApi.Controllers.AddressController.Delete(System.Int32)">
+            <summary>
+            Delete any existing address record
+            </summary>
+            <param name="id">Address record id, which is required to be deleted</param>
+        </member>
+        <member name="T:AddressBook.WebApi.Controllers.ContactController">
+            <summary>
+            Contact Controller
+            </summary>
+        </member>
+        <member name="M:AddressBook.WebApi.Controllers.ContactController.#ctor(AddressBookBusinessLib.Interface.IContactRepository)">
+            <summary>
+            Contact Controller
+            </summary>
+            <param name="contactRepository">Contact Repository Interface</param>
+        </member>
+        <member name="M:AddressBook.WebApi.Controllers.ContactController.Get">
+            <summary>
+            Get All Active Contact Records
+            </summary>
+            <returns>Array of Contact Objects</returns>
+        </member>
+        <member name="M:AddressBook.WebApi.Controllers.ContactController.Get(System.Int32)">
+            <summary>
+            Get Contact Record for provided record id
+            </summary>
+            <param name="id">Record of the contact record which has to be reterived</param>
+            <returns>Contact record object for the provided id</returns>
+        </member>
+        <member name="M:AddressBook.WebApi.Controllers.ContactController.Post(AddressBookBusinessLib.Model.Contact)">
+            <summary>
+            Use to save any new Contact entry
+            </summary>
+            <param name="contact">Contact object provided to be created as new entry</param>
+            <returns>Status OK when successfully created and Not Found when the creation failed</returns>
+        </member>
+        <member name="M:AddressBook.WebApi.Controllers.ContactController.Put(System.Int32,AddressBookBusinessLib.Model.Contact)">
+            <summary>
+            Use to update any existing Contact record
+            </summary>
+            <param name="id">Record of existing contact record</param>
+            <param name="contact">Contact changes encapsulated as contact object which has to be updated</param>
+            <returns>Status OK when the update is successful and Not Found when the operation is failed</returns>
+        </member>
+        <member name="M:AddressBook.WebApi.Controllers.ContactController.Delete(System.Int32)">
+            <summary>
+            Use to delete any existing Contact Record
+            </summary>
+            <param name="id">Record Id of existing contact record which is required to be deleted</param>
+        </member>
+    </members>
+</doc>
