@@ -17,3 +17,6 @@ My Sql Source Repository, which has circle ci (continious integration) and docke
 
 https://hub.docker.com/r/dhayanidhijr/addressbookdocker
 
+Git lab version: https://gitlab.com/dhayanidhijr/addressbook
+
+
